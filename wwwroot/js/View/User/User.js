@@ -10,6 +10,7 @@ Mitosiz.Site.User.Index.Controller = function () {
         base.Control.slcDepartment().change(base.Event.slcDepartmentChange);
         base.Control.slcProvince().change(base.Event.slcProvinceChange);
         base.Control.btnUpdateModal().click(base.Event.btnUpdateModalClick);
+        base.Control.btnReport().click(base.Event.btnReportClick);
         base.Ajax.AjaxGetDepartmentForAdmin.submit();
         base.Ajax.AjaxGetStoresAdmin.submit();
         base.Ajax.AjaxGetPackageDropDownForAdmin.submit();
@@ -85,6 +86,7 @@ Mitosiz.Site.User.Index.Controller = function () {
         slcStoreId: function () { return $('#slcStoreId'); },
         slcPackageId: function () { return $('#slcPackageId'); },
         btnUpdateModal: function () { return $('#btnUpdateModal'); },
+        btnReport: function () { return $('#btnReport'); },
     };
     base.Event = {
         AjaxGetUsersAdminSuccess: function (data) {
@@ -204,6 +206,11 @@ Mitosiz.Site.User.Index.Controller = function () {
                 }
             }
         },
+        AjaxGenerateUserReportSuccess: function (data) {
+            if (data) {
+                window.open('https://api.yosoymitosis.com/StaticFiles/ReportUser/' + data.data);
+            }
+        },
         btnSearchClick: function () {
             var userId = (base.Control.txtUserId().val() == "") ? 0 : parseInt(base.Control.txtUserId().val());
             base.Parameters.currentPage = 1;
@@ -259,6 +266,11 @@ Mitosiz.Site.User.Index.Controller = function () {
             };
             base.Ajax.AjaxGetDistrictForAdmin.submit();
         },
+        btnReportClick: function () {
+            base.Ajax.AjaxGenerateUserReport.data = {
+            };
+            base.Ajax.AjaxGenerateUserReport.submit();
+        },
     };
     base.Ajax = {
         AjaxGetUsersAdmin: new Mitosiz.Site.UI.Web.Components.Ajax({
@@ -305,6 +317,11 @@ Mitosiz.Site.User.Index.Controller = function () {
             action: Mitosiz.Site.User.Actions.DeleteUser,
             autoSubmit: false,
             onSuccess: base.Event.AjaxDeleteUserForAdminSuccess
+        }),
+        AjaxGenerateUserReport: new Mitosiz.Site.UI.Web.Components.Ajax({
+            action: Mitosiz.Site.User.Actions.GenerateUserReport,
+            autoSubmit: false,
+            onSuccess: base.Event.AjaxGenerateUserReportSuccess
         }),
     };
     base.Function = {
