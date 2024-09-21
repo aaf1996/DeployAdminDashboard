@@ -87,6 +87,9 @@ Mitosiz.Site.User.Index.Controller = function () {
         slcPackageId: function () { return $('#slcPackageId'); },
         btnUpdateModal: function () { return $('#btnUpdateModal'); },
         btnReport: function () { return $('#btnReport'); },
+        txtBank: function () { return $('#txtBank'); },
+        txtBankAccount: function () { return $('#txtBankAccount'); },
+        txtInterbankAccount: function () { return $('#txtInterbankAccount'); },
     };
     base.Event = {
         AjaxGetUsersAdminSuccess: function (data) {
@@ -246,6 +249,9 @@ Mitosiz.Site.User.Index.Controller = function () {
                 recognitionName: base.Control.txtRecognitionName().val(),
                 storeId: base.Control.slcStoreId().val(),
                 packageId: base.Control.slcPackageId().val(),
+                bank: base.Control.txtBank().val(),
+                bankAccount: base.Control.txtBankAccount().val(),
+                interbankAccount: base.Control.txtInterbankAccount().val(),
                 patronId: patronId
             };
             base.Ajax.AjaxUpdateUserForAdmin.submit();
@@ -519,6 +525,9 @@ Mitosiz.Site.User.Index.Controller = function () {
             base.Control.slcStoreId().val(data.storeId);
             base.Control.slcPackageId().val(data.packageId);
             base.Control.hiddenPatron().val(data.patronId);
+            base.Control.txtBank().val(data.bank);
+            base.Control.txtBankAccount().val(data.bankAccount);
+            base.Control.txtInterbankAccount().val(data.interbankAccount);
         },
     };
 }

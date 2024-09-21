@@ -3,16 +3,19 @@ Mitosiz.Site.Commission.Index.Controller = function () {
     var base = this;
     base.Initialize = function () {
         base.Function.clsNumberPagination();
+        base.Function.clsUpdateDataClick();
         base.Control.btnSearch().click(base.Event.btnSearchClick);
         base.Control.btnClear().click(base.Event.btnClearClick);
         base.Control.btnRecalculation().click(base.Event.btnRecalculationClick);
         base.Control.btnGenerateReport().click(base.Event.btnGenerateReportClick);
+        base.Control.btnUpdateModal().click(base.Event.btnUpdateModalClick);
         base.Ajax.AjaxGetPeriods.submit();
     };
     base.Parameters = {
         currentPage: 1,
         totalPages: 1,
-        sizePagination: 10
+        sizePagination: 10,
+        commissionId: 0
     };
     base.Control = {
         divPagination: function () { return $('#pagination'); },
@@ -27,6 +30,15 @@ Mitosiz.Site.Commission.Index.Controller = function () {
         btnClear: function () { return $('#btnClear'); },
         btnRecalculation: function () { return $('#btnRecalculation'); },
         btnGenerateReport: function () { return $('#btnGenerateReport'); },
+        txtNames: function () { return $('#txtNames'); },
+        txtPeriodName: function () { return $('#txtPeriodName'); },
+        txtPatronBonus: function () { return $('#txtPatronBonus'); },
+        txtRetirementBonus: function () { return $('#txtRetirementBonus'); },
+        txtRtiBonus: function () { return $('#txtRtiBonus'); },
+        txtExtraBonus: function () { return $('#txtExtraBonus'); },
+        modalUpdate: function () { return $('#modalUpdate'); },
+        btnUpdateModal: function () { return $('#btnUpdateModal'); },
+
     };
     base.Event = {
         AjaxGetUserCommissionForAdminSuccess: function (data) {
@@ -97,6 +109,31 @@ Mitosiz.Site.Commission.Index.Controller = function () {
                 }
             }
         },
+        AjaxGetDetailCommissionByCommissionIdSuccess: function (data) {
+            if (data) {
+                if (data.isSuccess) {
+                    base.Control.txtNames().val(data.data.names);
+                    base.Control.txtPeriodName().val(data.data.periodName);
+                    base.Control.txtPatronBonus().val(data.data.patronBonus);
+                    base.Control.txtRetirementBonus().val(data.data.retirementBonus);
+                    base.Control.txtRtiBonus().val(data.data.rtiBonus);
+                    base.Control.txtExtraBonus().val(data.data.extraBonus);
+                    base.Control.modalUpdate().modal('show');
+                }
+            }
+        },
+        AjaxUpdateCommissionUserByCommissionIdSuccess: function (data) {
+            if (data) {
+                if (data.isSuccess) {
+                    Swal.fire("Excelente !!", "Comisión Actualizada !!", "success")
+                    base.Control.modalUpdate().modal('hide');
+                    base.Function.GetUserCommissionForAdmin();
+                }
+                else {
+                    Swal.fire("Oops...", "Ocurrió un error, Por favor intententelo nuevamente", "error")
+                }
+            }
+        },
         btnSearchClick: function () {
             base.Parameters.currentPage = 1;
             var userId = (base.Control.txtUserIdFilter().val() == "") ? 0 : parseInt(base.Control.txtUserIdFilter().val());
@@ -160,6 +197,16 @@ Mitosiz.Site.Commission.Index.Controller = function () {
                 base.Ajax.AjaxGetReportGeneralCommission.submit();
             }
         },
+        btnUpdateModalClick: function () {
+            base.Ajax.AjaxUpdateCommissionUserByCommissionId.data = {
+                commissionId: base.Parameters.commissionId,
+                patronBonus: base.Control.txtPatronBonus().val(),
+                retirementBonus: base.Control.txtRetirementBonus().val(),
+                rtiBonus: base.Control.txtRtiBonus().val(),
+                extraBonus: base.Control.txtExtraBonus().val()
+            };
+            base.Ajax.AjaxUpdateCommissionUserByCommissionId.submit();
+        },
     };
     base.Ajax = {
         AjaxGetPeriods: new Mitosiz.Site.UI.Web.Components.Ajax({
@@ -196,6 +243,16 @@ Mitosiz.Site.Commission.Index.Controller = function () {
             action: Mitosiz.Site.Commission.Actions.GetReportGeneralCommission,
             autoSubmit: false,
             onSuccess: base.Event.AjaxGetReportGeneralCommissionSuccess
+        }),
+        AjaxGetDetailCommissionByCommissionId: new Mitosiz.Site.UI.Web.Components.Ajax({
+            action: Mitosiz.Site.Commission.Actions.GetDetailCommissionByCommissionId,
+            autoSubmit: false,
+            onSuccess: base.Event.AjaxGetDetailCommissionByCommissionIdSuccess
+        }),
+        AjaxUpdateCommissionUserByCommissionId: new Mitosiz.Site.UI.Web.Components.Ajax({
+            action: Mitosiz.Site.Commission.Actions.UpdateCommissionUserByCommissionId,
+            autoSubmit: false,
+            onSuccess: base.Event.AjaxUpdateCommissionUserByCommissionIdSuccess
         }),
     };
     base.Function = {
@@ -277,13 +334,27 @@ Mitosiz.Site.Commission.Index.Controller = function () {
             base.Control.tbodyTable().empty();
             listData.forEach(function (data) {
                 base.Control.tbodyTable().append('<tr style="text-align: center;">' +
+                    '<td>' +
+                    '<div class="dropdown">' +
+                    '<button type="button" class="btn btn-success light sharp" data-bs-toggle="dropdown">' +
+                    '<svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1">' +
+                    '<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">' +
+                    '<rect x="0" y="0" width="24" height="24" /><circle fill="#000000" cx="5" cy="12" r="2" /><circle fill="#000000" cx="12" cy="12" r="2" /><circle fill="#000000" cx="19" cy="12" r="2" />' +
+                    '</g>' +
+                    '</svg>' +
+                    '</button>' +
+                    '<div class="dropdown-menu">' +
+                    '<a class="dropdown-item updateData" value="' + data.commissionId + '" href="#">Actualizar</a>' +
+                    '</div>' +
+                    '</div></td>' +
                     '<td><strong>' + data.userId + '</strong></td>' +
                     '<td>' + data.names + '</td>' +
                     '<td>' + data.lastName + '</td>' +
                     '<td>' + data.patronBonus + '</td>' +
                     '<td>' + data.retirementBonus + '</td>' +
                     '<td>' + data.rtiBonus + '</td>' +
-                    '<td>' + (data.patronBonus + data.retirementBonus + data.rtiBonus).toFixed(2) + '</td>' +
+                    '<td>' + data.extraBonus + '</td>' +
+                    '<td>' + data.totalComission + '</td>' +
                     '</tr>');
             });
             base.Function.UpdatePagination();
@@ -293,6 +364,17 @@ Mitosiz.Site.Commission.Index.Controller = function () {
             base.Control.txtNamesFilter().val("");
             base.Control.slcPeriodFilter().find('option:first').prop('selected', true);
             base.Control.slcPeriodFilter().selectpicker('refresh');
+        },
+        clsUpdateDataClick: function () {
+            var parentElement = $(document);
+            parentElement.on('click', '.updateData', function () {
+                var commissionId = $(this).attr('value');
+                base.Parameters.commissionId = commissionId;
+                base.Ajax.AjaxGetDetailCommissionByCommissionId.data = {
+                    commissionId: commissionId
+                };
+                base.Ajax.AjaxGetDetailCommissionByCommissionId.submit();
+            });
         },
     };
 }
