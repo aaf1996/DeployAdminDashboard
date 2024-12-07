@@ -201,12 +201,11 @@ Mitosiz.Site.User.Index.Controller = function () {
             if (data) {
                 if (data.isSuccess) {
                     Swal.fire("Excelente !!", "El Usuario fue eliminado !!", "success")
-                    base.Function.GetUsersAdmin();
                 }
                 else {
                     Swal.fire("Oops...", "Ocurrió un error, Por favor intententelo nuevamente", "error")
-                    base.Function.GetUsersAdmin();
                 }
+                base.Function.GetUsersAdmin();
             }
         },
         AjaxGenerateUserReportSuccess: function (data) {
