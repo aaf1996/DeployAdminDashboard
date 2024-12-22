@@ -260,7 +260,7 @@ Mitosiz.Site.OrderHistory.Index.Controller = function () {
         FillData: function (listData) {
             base.Control.tbodyTable().empty();
             listData.forEach(function (data) {
-                var urlVoucher = 'https://api.yosoymitosis.com/StaticFiles/PaymentImg/' + data.imageUrl;
+                var urlVoucher = 'https://api.yosoymitosis.com/StaticFiles/PaymentWholesale/' + data.imageUrl;
                 var styleVoucher = data.imageUrl == '' ? "display:none;" : "";
                 var styleDelete = data.statusPurchase == 'Realizada' ? "display:none;" : "";
                 var styleApprove = data.statusPurchase == 'Pendiente' || data.statusPurchase == 'Realizada' ? "display:none;" : "";
