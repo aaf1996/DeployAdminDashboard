@@ -10,6 +10,7 @@ Mitosiz.Site.OrderHistory.Index.Controller = function () {
         base.Control.btnClear().click(base.Event.btnClearClick);
         base.Function.clsDeleteOrderClick();
         base.Function.clsApproveOrderClick();
+        base.Function.clsApproveShippingClick();
     };
     base.Parameters = {
         currentPage: 1,
@@ -97,6 +98,18 @@ Mitosiz.Site.OrderHistory.Index.Controller = function () {
                 }
             }
         },
+        AjaxApproveShippingStatusSuccess: function (data) {
+            if (data) {
+                if (data.data.status) {
+                    Swal.fire("Excelente !!", "La entrega fue actualizada !!", "success")
+                    base.Function.GetOrderAdmin();
+                }
+                else {
+                    Swal.fire("Oops...", "Ocurrió un error, Por favor intententelo nuevamente", "error")
+                    base.Function.GetOrderAdmin();
+                }
+            }
+        },
     };
     base.Ajax = {
         AjaxGetWholesaleOrderForAdmin: new Mitosiz.Site.UI.Web.Components.Ajax({
@@ -113,6 +126,11 @@ Mitosiz.Site.OrderHistory.Index.Controller = function () {
             action: Mitosiz.Site.OrderHistory.Actions.ApproveOrderWholesale,
             autoSubmit: false,
             onSuccess: base.Event.AjaxApproveOrderWholesaleSuccess
+        }),
+        AjaxApproveShippingStatus: new Mitosiz.Site.UI.Web.Components.Ajax({
+            action: Mitosiz.Site.OrderHistory.Actions.ApproveShippingStatus,
+            autoSubmit: false,
+            onSuccess: base.Event.AjaxApproveShippingStatusSuccess
         }),
         AjaxDeleteOrderWholesale: new Mitosiz.Site.UI.Web.Components.Ajax({
             action: Mitosiz.Site.OrderHistory.Actions.DeleteOrderWholesale,
@@ -291,11 +309,18 @@ Mitosiz.Site.OrderHistory.Index.Controller = function () {
                     '<td>' + data.quantity + '</td>' +
                     '<td>' + data.nameTypePurchase + '</td>' +
                     '<td>' + data.statusPurchase + '</td>' +
+                    '<td>' + data.shippingStatus + '</td>' +
                     '<td>' + data.typePayment + '</td>' +
                     '<td>' +
                     '<div style="' + styleVoucher + '">' +
                     '<a href = "' + urlVoucher + '" class= "btn btn-primary shadow btn-s sharp me-1" target="_blank">' +
                     '<i class="fa-solid fa-ticket"></i>' +
+                    '</a>' +
+                    '</div></td>' +
+                    '<td class="column-modal">' +
+                    '<div class="approveShipping" value="' + data.wholesaleOrderId + '">' +
+                    '<a class= "btn btn-success shadow btn-s sharp me-1">' +
+                    '<i class="fa-solid flaticon-381-success-2"></i>' +
                     '</a>' +
                     '</div></td>' +
                     '</tr>');
@@ -381,6 +406,28 @@ Mitosiz.Site.OrderHistory.Index.Controller = function () {
                             wholesaleOrderId: orderId
                         };
                         base.Ajax.AjaxApproveOrderWholesale.submit();
+                    }
+                });
+            });
+        },
+        clsApproveShippingClick: function () {
+            var parentElement = $(document);
+            parentElement.on('click', '.approveShipping', function () {
+                var orderId = $(this).attr('value');
+                Swal.fire({
+                    title: "Estás segur@ de aprobar el despacho del pedido?",
+                    text: "Esto no se puede revertir!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Si, aprobar!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        base.Ajax.AjaxApproveShippingStatus.data = {
+                            wholesaleOrderId: orderId
+                        };
+                        base.Ajax.AjaxApproveShippingStatus.submit();
                     }
                 });
             });
