@@ -17,13 +17,12 @@ Mitosiz.Site.InformationFiles.Index.Controller = function () {
         currentPage: 1,
         totalPages: 1,
         sizePagination: 10,
-        informationFileId: 10,
+        informationFileId: 0,
         oldFileName: ''
     };
     base.Control = {
         divPagination: function () { return $('#pagination'); },
         tbodyTable: function () { return $('#tbodyInformation'); },
-        tbodyProductPackage: function () { return $('#tbodyProductPackage'); },
         slcFileTypeFilter: function () { return $('#slcFileTypeFilter'); },
         txtDescriptionFilter: function () { return $('#txtDescriptionFilter'); },
         btnSearch: function () { return $('#btnSearch'); },
