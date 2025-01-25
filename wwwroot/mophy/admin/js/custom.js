@@ -282,8 +282,8 @@ var Mophy = function(){
     }
 	
 	var handleSupport = function(){
-		var support = '<script id="DZScript" src="https://dzassets.s3.amazonaws.com/w3-global.js?btn_dir=right"></script>';
-		jQuery('body').append(support);
+		//var support = '<script id="DZScript" src="https://dzassets.s3.amazonaws.com/w3-global.js?btn_dir=right"></script>';
+		//jQuery('body').append(support);
 	}
     
 	var domoPanel = function(){
