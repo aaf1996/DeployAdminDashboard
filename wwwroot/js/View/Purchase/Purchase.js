@@ -44,6 +44,7 @@ Mitosiz.Site.Purchase.Index.Controller = function () {
         txtRegistrationDate: function () { return $('#txtRegistrationDate'); },
         txtRealPoints: function () { return $('#txtRealPoints'); },
         txtPromotionPoints: function () { return $('#txtPromotionPoints'); },
+        txtPointsWholesale: function () { return $('#txtPointsWholesale'); },
         slcStatusPurchase: function () { return $('#slcStatusPurchase'); },
         slcShippingStatus: function () { return $('#slcShippingStatus'); },
         btnUpdateModal: function () { return $('#btnUpdateModal'); },
@@ -120,6 +121,7 @@ Mitosiz.Site.Purchase.Index.Controller = function () {
                     }).datepicker("setDate", dateString);
                     base.Control.txtRealPoints().val(data.data.realPoints);
                     base.Control.txtPromotionPoints().val(data.data.promotionPoints);
+                    base.Control.txtPointsWholesale().val(data.data.pointsWholesale);
                     base.Control.slcTypePurchase().val(data.data.typePurchaseId);
                     base.Control.slcTypePurchase().selectpicker('refresh');
                     base.Control.slcStore().val(data.data.storeId);
@@ -207,6 +209,7 @@ Mitosiz.Site.Purchase.Index.Controller = function () {
                 creationTime: base.Control.txtRegistrationDate().val(),
                 realPoints: base.Control.txtRealPoints().val(),
                 promotionPoints: base.Control.txtPromotionPoints().val(),
+                pointsWholesale: base.Control.txtPointsWholesale().val(),
                 typePurchaseId: base.Control.slcTypePurchase().val(),
                 storeId: base.Control.slcStore().val(),
                 typePayment: base.Control.slcTypePayment().find('option:selected').text(),
