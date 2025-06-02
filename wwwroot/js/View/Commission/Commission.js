@@ -76,6 +76,14 @@ Mitosiz.Site.Commission.Index.Controller = function () {
                 }
             }
         },
+        AjaxRecalculationCommissionWholesaleSuccess: function (data) {
+            if (data) {
+                if (data.isSuccess) {
+                    $('#loading-area').fadeOut();
+                    Swal.fire("Excelente !!", "Recalculo terminado !!", "success");
+                }
+            }
+        },
         AjaxGetReportNetworkWithCommissionSuccess: function (data) {
             if (data) {
                 $('#loading-area').fadeOut();
@@ -180,6 +188,12 @@ Mitosiz.Site.Commission.Index.Controller = function () {
                 };
                 base.Ajax.AjaxRecalculationPatronBonus.submit();
             }
+            else if (process == "4") {
+                base.Ajax.AjaxRecalculationCommissionWholesale.data = {
+                    commissionPeriodId: base.Control.slcPeriod().val()
+                };
+                base.Ajax.AjaxRecalculationCommissionWholesale.submit();
+            }
         },
         btnGenerateReportClick: function () {
             $('#loading-area').fadeIn();
@@ -253,6 +267,11 @@ Mitosiz.Site.Commission.Index.Controller = function () {
             action: Mitosiz.Site.Commission.Actions.UpdateCommissionUserByCommissionId,
             autoSubmit: false,
             onSuccess: base.Event.AjaxUpdateCommissionUserByCommissionIdSuccess
+        }),
+        AjaxRecalculationCommissionWholesale: new Mitosiz.Site.UI.Web.Components.Ajax({
+            action: Mitosiz.Site.Commission.Actions.RecalculationCommissionWholesale,
+            autoSubmit: false,
+            onSuccess: base.Event.AjaxRecalculationCommissionWholesaleSuccess
         }),
     };
     base.Function = {

@@ -14,6 +14,7 @@ Mitosiz.Site.User.Index.Controller = function () {
         base.Ajax.AjaxGetDepartmentForAdmin.submit();
         base.Ajax.AjaxGetStoresAdmin.submit();
         base.Ajax.AjaxGetPackageDropDownForAdmin.submit();
+        base.Control.chkFilterRegistration().change(base.Event.chkFilterRegistrationChange);
         base.Control.txtPatron().autocomplete({
             source: function (request, response) {
                 $.ajax({
@@ -46,6 +47,7 @@ Mitosiz.Site.User.Index.Controller = function () {
                 return false;
             }
         });
+        base.Control.clsFilterDate().hide();
     };
     base.Parameters = {
         currentPage: 1,
@@ -90,6 +92,11 @@ Mitosiz.Site.User.Index.Controller = function () {
         txtBank: function () { return $('#txtBank'); },
         txtBankAccount: function () { return $('#txtBankAccount'); },
         txtInterbankAccount: function () { return $('#txtInterbankAccount'); },
+        clsFilterDate: function () { return $('.clsFilterDate'); },
+        divChkFilterRegistration: function () { return $('#divChkFilterRegistration'); },
+        chkFilterRegistration: function () { return $('#chkFilterRegistration'); },
+        txtStartDate: function () { return $('#txtStartDate'); },
+        txtEndDate: function () { return $('#txtEndDate'); },
     };
     base.Event = {
         AjaxGetUsersAdminSuccess: function (data) {
@@ -215,13 +222,24 @@ Mitosiz.Site.User.Index.Controller = function () {
         },
         btnSearchClick: function () {
             var userId = (base.Control.txtUserId().val() == "") ? 0 : parseInt(base.Control.txtUserId().val());
+            var filterDates = $('#chkFilterRegistration').is(':checked');
+            if (filterDates) {
+                var start = moment(base.Control.txtStartDate().val(), "DD/MM/YYYY");
+                var end = moment(base.Control.txtEndDate().val(), "DD/MM/YYYY");
+                if (start > end) {
+                    Swal.fire("Oops...", "La Fecha de Inicio no puede ser mayor a la Fecha de Fin", "error")
+                    return;
+                }
+            }
             base.Parameters.currentPage = 1;
             base.Ajax.AjaxGetUsersAdmin.data = {
                 number: base.Parameters.currentPage,
                 size: base.Parameters.sizePagination,
                 userId: userId,
                 document: base.Control.txtDocument().val(),
-                names: base.Control.txtNames().val()
+                names: base.Control.txtNames().val(),
+                startDateString: filterDates ? base.Control.txtStartDate().val() : "",
+                endDateString: filterDates ? base.Control.txtEndDate().val() : ""
             };
             base.Ajax.AjaxGetUsersAdmin.submit();
         },
@@ -275,6 +293,13 @@ Mitosiz.Site.User.Index.Controller = function () {
             base.Ajax.AjaxGenerateUserReport.data = {
             };
             base.Ajax.AjaxGenerateUserReport.submit();
+        },
+        chkFilterRegistrationChange: function () {
+            if ($(this).is(':checked')) {
+                base.Control.clsFilterDate().show();
+            } else {
+                base.Control.clsFilterDate().hide();
+            }
         },
     };
     base.Ajax = {
