@@ -12,6 +12,7 @@ Mitosiz.Site.MovementOfCommittees.Index.Controller = function () {
         base.Control.btnSaveModal().click(base.Event.btnSaveModalClick);
         base.Control.btnPayCommissions().click(base.Event.btnPayCommissionsClick);
         base.Control.btnNewCommission().click(base.Event.btnNewCommissionClick);
+        base.Control.btnGenerateReport().click(base.Event.btnGenerateReportClick);
         base.Control.txtNamesFilter().autocomplete({
             source: function (request, response) {
                 $.ajax({
@@ -111,6 +112,8 @@ Mitosiz.Site.MovementOfCommittees.Index.Controller = function () {
         divObservationModal: function () { return $('#divObservationModal'); },
         hiddenUserIdModal: function () { return $('#hiddenUserIdModal'); },
         btnNewCommission: function () { return $('#btnNewCommission'); },
+        btnGenerateReport: function () { return $('#btnGenerateReport'); },
+        slcReports: function () { return $('#slcReports'); },
     };
     base.Event = {
         slcTypeOfMovementFilterChange: function () {
@@ -218,6 +221,11 @@ Mitosiz.Site.MovementOfCommittees.Index.Controller = function () {
                 }
             }
         },
+        AjaxGetMovementOfCommitteesForReportSuccess: function (data) {
+            if (data) {
+                window.open('https://api.yosoymitosis.com/StaticFiles/ReportMovementOfCommittees/' + data.data);
+            }
+        },
         btnSearchClick: function () {
             base.Parameters.currentPage = 1;
             var userId = (base.Control.hiddenUserIdFilter().val() == '') ? 0 : parseInt(base.Control.hiddenUserIdFilter().val());
@@ -244,20 +252,26 @@ Mitosiz.Site.MovementOfCommittees.Index.Controller = function () {
             base.Ajax.AjaxGetMovementOfCommitteesForAdmin.submit();
         },
         btnGenerateReportClick: function () {
-            $('#loading-area').fadeIn();
             var process = base.Control.slcReports().val();
+            var userId = (base.Control.hiddenUserIdFilter().val() == '') ? 0 : parseInt(base.Control.hiddenUserIdFilter().val());
+            var commissionPeriod = base.Control.slcPeriod().val();
             if (process == "1") {
-                base.Ajax.AjaxGetReportNetworkWithCommission.data = {
-                    commissionPeriodId: base.Control.slcPeriod().val()
-                };
-                base.Ajax.AjaxGetReportNetworkWithCommission.submit();
+                userId = 0;
+                commissionPeriod = 0;
             }
             else if (process == "2") {
-                base.Ajax.AjaxGetReportGeneralCommission.data = {
-                    commissionPeriodId: base.Control.slcPeriod().val()
-                };
-                base.Ajax.AjaxGetReportGeneralCommission.submit();
+                userId = 0;
             }
+            else if (process == "3") {
+                commissionPeriod = 0;
+            }
+
+            base.Ajax.AjaxGetMovementOfCommitteesForReport.data = {
+                typeReport: process,
+                userId: userId,
+                commissionPeriodId: commissionPeriod,
+            };
+            base.Ajax.AjaxGetMovementOfCommitteesForReport.submit();
         },
         btnUpdateModalClick: function () {
             if (base.Control.hiddenUserIdModal().val() == '') {
@@ -359,6 +373,11 @@ Mitosiz.Site.MovementOfCommittees.Index.Controller = function () {
             action: Mitosiz.Site.MovementOfCommittees.Actions.InsertComissionTobeReceived,
             autoSubmit: false,
             onSuccess: base.Event.AjaxInsertComissionTobeReceivedSuccess
+        }),
+        AjaxGetMovementOfCommitteesForReport: new Mitosiz.Site.UI.Web.Components.Ajax({
+            action: Mitosiz.Site.MovementOfCommittees.Actions.GetMovementOfCommitteesForReport,
+            autoSubmit: false,
+            onSuccess: base.Event.AjaxGetMovementOfCommitteesForReportSuccess
         }),
     };
     base.Function = {
