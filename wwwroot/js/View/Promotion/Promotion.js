@@ -239,10 +239,10 @@ Mitosiz.Site.Promotion.Index.Controller = function () {
                 active: base.Control.slcStatusAdditionalScore().val() === "true",
                 additionalPercentage: base.Control.slcAdditionalPercentage().val(),
                 subTypePurchase: txtSubTypes,
-                startDate: base.Control.txtInitPromotionDate().val(),
-                startHour: base.Control.txtInitPromotionHour().val(),
-                endDate: base.Control.txtEndPromotionDate().val(),
-                endHour: base.Control.txtEndPromotionHour().val(),
+                startDate: base.Control.txtStartDateAditionalScore().val(),
+                startHour: base.Control.txtStartHourAditionalScore().val(),
+                endDate: base.Control.txtEndDateAditionalScore().val(),
+                endHour: base.Control.txtEndHourAditionalScore().val(),
             };
             base.Ajax.AjaxUpdateAdditionalScorePromotionFromViewAdmin.submit();
         },
@@ -256,10 +256,10 @@ Mitosiz.Site.Promotion.Index.Controller = function () {
                 active: base.Control.slcStatusAdditionalScore().val() === "true",
                 additionalPercentage: base.Control.slcAdditionalPercentage().val(),
                 subTypePurchase: txtSubTypes,
-                startDate: base.Control.txtInitPromotionDate().val(),
-                startHour: base.Control.txtInitPromotionHour().val(),
-                endDate: base.Control.txtEndPromotionDate().val(),
-                endHour: base.Control.txtEndPromotionHour().val(),
+                startDate: base.Control.txtStartDateAditionalScore().val(),
+                startHour: base.Control.txtStartHourAditionalScore().val(),
+                endDate: base.Control.txtEndDateAditionalScore().val(),
+                endHour: base.Control.txtEndHourAditionalScore().val(),
             };
             base.Ajax.AjaxInsertAdditionalScorePromotionFromViewAdmin.submit();
         },
