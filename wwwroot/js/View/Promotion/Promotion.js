@@ -187,11 +187,17 @@ Mitosiz.Site.Promotion.Index.Controller = function () {
                 Swal.fire("Oops...", "Porfavor ingrese un valor válido en Cantidad", "error")
             }
             else {
+                let listSubTypes = $('.chkSubTypePurchaseYapa:checked').map(function () {
+                    return parseInt($(this).attr('value-hidden'));
+                }).get();
+                let txtSubTypes = listSubTypes.join(','); 
+
                 base.Ajax.AjaxUpdatePromotionAmount45.data = {
                     promotionAmountId: base.Parameters.promotionAmountId,
                     pointsEvaluated: base.Control.txtPoints().val(),
                     quantity: base.Control.txtQuantity().val(),
                     active: base.Control.slcStatus().val() === "true",
+                    subTypePurchase: txtSubTypes,
                     startDatePromotionEvaluation: base.Control.txtInitEvaluationDate().val(),
                     startHourPromotionEvaluation: base.Control.txtInitEvaluationHour().val(),
                     endDatePromotionEvaluation: base.Control.txtEndEvaluationDate().val(),
@@ -212,10 +218,16 @@ Mitosiz.Site.Promotion.Index.Controller = function () {
                 Swal.fire("Oops...", "Porfavor ingrese un valor válido en Cantidad", "error")
             }
             else {
+                let listSubTypes = $('.chkSubTypePurchaseYapa:checked').map(function () {
+                    return parseInt($(this).attr('value-hidden'));
+                }).get();
+                let txtSubTypes = listSubTypes.join(',');
+
                 base.Ajax.AjaxInsertPromotionAmount45.data = {
                     pointsEvaluated: base.Control.txtPoints().val(),
                     quantity: base.Control.txtQuantity().val(),
                     active: base.Control.slcStatus().val() === "true",
+                    subTypePurchase: txtSubTypes,
                     startDatePromotionEvaluation: base.Control.txtInitEvaluationDate().val(),
                     startHourPromotionEvaluation: base.Control.txtInitEvaluationHour().val(),
                     endDatePromotionEvaluation: base.Control.txtEndEvaluationDate().val(),
@@ -276,6 +288,7 @@ Mitosiz.Site.Promotion.Index.Controller = function () {
             base.Control.txtInitPromotionHour().val("00:00");
             base.Control.txtEndPromotionDate().datepicker("setDate", new Date());
             base.Control.txtEndPromotionHour().val("00:00");
+            $('.chkSubTypePurchaseYapa').prop('checked', false);
 
             base.Control.btnUpdateModal().hide();
             base.Control.btnCreateModal().show();
@@ -613,6 +626,11 @@ Mitosiz.Site.Promotion.Index.Controller = function () {
             base.Control.txtInitPromotionHour().val(data.startHourPromotionRun);
             base.Control.txtEndPromotionDate().val(data.endDatePromotionRun);
             base.Control.txtEndPromotionHour().val(data.endHourPromotionRun);
+            $('.chkSubTypePurchaseYapa').prop('checked', false);
+            let listSubTypePurchase = data.subTypePurchase.split(",");
+            listSubTypePurchase.forEach(id => {
+                $('#chkYapa' + id).prop('checked', true);
+            });
         },
         FillDataModalAdditionalScore: function (data) {
             base.Control.slcStatusAdditionalScore().val(data.active.toString());
