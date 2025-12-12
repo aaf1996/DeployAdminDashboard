@@ -37,6 +37,7 @@ Mitosiz.Site.Product.Index.Controller = function () {
         slcActive: function () { return $('#slcActive'); },
         slcWholesaleVisualisable: function () { return $('#slcWholesaleVisualisable'); },
         txtPointsWholesale: function () { return $('#txtPointsWholesale'); },
+        txtPointsMiles: function () { return $('#txtPointsMiles'); },
         txtCodeMitosiz: function () { return $('#txtCodeMitosiz'); },
         txtProductName: function () { return $('#txtProductName'); },
         txtDescription: function () { return $('#txtDescription'); },
@@ -128,6 +129,7 @@ Mitosiz.Site.Product.Index.Controller = function () {
             formData.append('oldImageName', base.Parameters.oldImageName);
             formData.append('activationPoints', base.Control.txtActivationPoints().val());
             formData.append('pointsWholesale', base.Control.txtPointsWholesale().val());
+            formData.append('pointsMiles', base.Control.txtPointsMiles().val());
             formData.append('networkPoints', base.Control.txtNetworkPoints().val());
             formData.append('discount', discount);
             formData.append('isOriginalProduct', base.Control.slcIsOriginalProduct().val());
@@ -197,7 +199,7 @@ Mitosiz.Site.Product.Index.Controller = function () {
             formData.append('oldImageName', base.Parameters.oldImageName);
             formData.append('activationPoints', base.Control.txtActivationPoints().val());
             formData.append('networkPoints', base.Control.txtNetworkPoints().val());
-            formData.append('pointsWholesale', base.Control.txtPointsWholesale().val());
+            formData.append('pointsMiles', base.Control.txtPointsMiles().val());
             formData.append('discount', discount);
             formData.append('isOriginalProduct', base.Control.slcIsOriginalProduct().val());
             formData.append('idOriginalProduct', base.Control.txtIdOriginalProduct().val());
@@ -264,6 +266,7 @@ Mitosiz.Site.Product.Index.Controller = function () {
             base.Control.txtActivationPoints().val("0");
             base.Control.txtNetworkPoints().val("0");
             base.Control.txtPointsWholesale().val("0");
+            base.Control.txtPointsMiles().val("0");
             base.Control.txtDiscount().val("0");
             base.Control.slcIsOriginalProduct().val("true");
             base.Control.slcIsOriginalProduct().selectpicker('refresh');
@@ -506,6 +509,7 @@ Mitosiz.Site.Product.Index.Controller = function () {
             base.Control.txtActivationPoints().val(data.activationPoints);
             base.Control.txtNetworkPoints().val(data.networkPoints);
             base.Control.txtPointsWholesale().val(data.pointsWholesale);
+            base.Control.txtPointsMiles().val(data.pointsMiles);
             base.Control.txtDiscount().val(data.discount);
             base.Control.slcIsOriginalProduct().val(data.isOriginalProduct.toString());
             base.Control.slcIsOriginalProduct().selectpicker('refresh');

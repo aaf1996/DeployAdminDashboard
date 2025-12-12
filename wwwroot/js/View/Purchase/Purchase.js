@@ -45,6 +45,7 @@ Mitosiz.Site.Purchase.Index.Controller = function () {
         txtRealPoints: function () { return $('#txtRealPoints'); },
         txtPromotionPoints: function () { return $('#txtPromotionPoints'); },
         txtPointsWholesale: function () { return $('#txtPointsWholesale'); },
+        txtPointsMiles: function () { return $('#txtPointsMiles'); },
         slcStatusPurchase: function () { return $('#slcStatusPurchase'); },
         slcShippingStatus: function () { return $('#slcShippingStatus'); },
         btnUpdateModal: function () { return $('#btnUpdateModal'); },
@@ -122,6 +123,7 @@ Mitosiz.Site.Purchase.Index.Controller = function () {
                     base.Control.txtRealPoints().val(data.data.realPoints);
                     base.Control.txtPromotionPoints().val(data.data.promotionPoints);
                     base.Control.txtPointsWholesale().val(data.data.pointsWholesale);
+                    base.Control.txtPointsMiles().val(data.data.pointsMiles);
                     base.Control.slcTypePurchase().val(data.data.typePurchaseId);
                     base.Control.slcTypePurchase().selectpicker('refresh');
                     base.Control.slcStore().val(data.data.storeId);
@@ -211,6 +213,7 @@ Mitosiz.Site.Purchase.Index.Controller = function () {
                 realPoints: base.Control.txtRealPoints().val(),
                 promotionPoints: base.Control.txtPromotionPoints().val(),
                 pointsWholesale: base.Control.txtPointsWholesale().val(),
+                pointsMiles: base.Control.txtPointsMiles().val(),
                 typePurchaseId: base.Control.slcTypePurchase().val(),
                 storeId: base.Control.slcStore().val(),
                 typePayment: base.Control.slcTypePayment().find('option:selected').text(),
@@ -547,6 +550,7 @@ Mitosiz.Site.Purchase.Index.Controller = function () {
                     '<td>' + data.subtotalNetAmount + '</td>' +
                     '<td>' + data.subtotalPoints + '</td>' +
                     '<td>' + data.subtotalPointsNetwork + '</td>' +
+                    '<td>' + data.subtotalPointsMiles + '</td>' +
                     '</tr>');
             });
             base.Function.UpdatePaginationModal();
