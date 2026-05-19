@@ -290,7 +290,22 @@ Mitosiz.Site.User.Index.Controller = function () {
             base.Ajax.AjaxGetDistrictForAdmin.submit();
         },
         btnReportClick: function () {
+            var userId = (base.Control.txtUserId().val() == "") ? 0 : parseInt(base.Control.txtUserId().val());
+            var filterDates = $('#chkFilterRegistration').is(':checked');
+            if (filterDates) {
+                var start = moment(base.Control.txtStartDate().val(), "DD/MM/YYYY");
+                var end = moment(base.Control.txtEndDate().val(), "DD/MM/YYYY");
+                if (start > end) {
+                    Swal.fire("Oops...", "La Fecha de Inicio no puede ser mayor a la Fecha de Fin", "error")
+                    return;
+                }
+            }
             base.Ajax.AjaxGenerateUserReport.data = {
+                userId: userId,
+                document: base.Control.txtDocument().val(),
+                names: base.Control.txtNames().val(),
+                startDateString: filterDates ? base.Control.txtStartDate().val() : "",
+                endDateString: filterDates ? base.Control.txtEndDate().val() : ""
             };
             base.Ajax.AjaxGenerateUserReport.submit();
         },
@@ -420,12 +435,23 @@ Mitosiz.Site.User.Index.Controller = function () {
         },
         GetUsersAdmin: function () {
             var userId = (base.Control.txtUserId().val() == "") ? 0 : parseInt(base.Control.txtUserId().val());
+            var filterDates = $('#chkFilterRegistration').is(':checked');
+            if (filterDates) {
+                var start = moment(base.Control.txtStartDate().val(), "DD/MM/YYYY");
+                var end = moment(base.Control.txtEndDate().val(), "DD/MM/YYYY");
+                if (start > end) {
+                    Swal.fire("Oops...", "La Fecha de Inicio no puede ser mayor a la Fecha de Fin", "error")
+                    return;
+                }
+            }
             base.Ajax.AjaxGetUsersAdmin.data = {
                 number: base.Parameters.currentPage,
                 size: base.Parameters.sizePagination,
                 userId: userId,
                 document: base.Control.txtDocument().val(),
-                names: base.Control.txtNames().val()
+                names: base.Control.txtNames().val(),
+                startDateString: filterDates ? base.Control.txtStartDate().val() : "",
+                endDateString: filterDates ? base.Control.txtEndDate().val() : ""
             };
             base.Ajax.AjaxGetUsersAdmin.submit();
         },
