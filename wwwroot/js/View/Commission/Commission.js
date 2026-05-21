@@ -102,6 +102,12 @@ Mitosiz.Site.Commission.Index.Controller = function () {
                 window.open('https://api.yosoymitosis.com/StaticFiles/ReportCommission/' + data.data);
             }
         },
+        AjaxReportCommissionWholesaleSuccess: function (data) {
+            if (data) {
+                $('#loading-area').fadeOut();
+                window.open('https://api.yosoymitosis.com/StaticFiles/ReportCommissionWholesale/' + data.data);
+            }
+        },
         AjaxGetPeriodSuccess: function (data) {
             if (data) {
                 if (data.isSuccess) {
@@ -222,6 +228,12 @@ Mitosiz.Site.Commission.Index.Controller = function () {
                 };
                 base.Ajax.AjaxReportMilesNetwork.submit();
             }
+            else if (process == "4") {
+                base.Ajax.AjaxReportCommissionWholesale.data = {
+                    commissionPeriodId: base.Control.slcPeriod().val()
+                };
+                base.Ajax.AjaxReportCommissionWholesale.submit();
+            }
         },
         btnUpdateModalClick: function () {
             base.Ajax.AjaxUpdateCommissionUserByCommissionId.data = {
@@ -289,6 +301,11 @@ Mitosiz.Site.Commission.Index.Controller = function () {
             action: Mitosiz.Site.Commission.Actions.RecalculationCommissionWholesale,
             autoSubmit: false,
             onSuccess: base.Event.AjaxRecalculationCommissionWholesaleSuccess
+        }),
+        AjaxReportCommissionWholesale: new Mitosiz.Site.UI.Web.Components.Ajax({
+            action: Mitosiz.Site.Commission.Actions.GetReportCommissionWholesale,
+            autoSubmit: false,
+            onSuccess: base.Event.AjaxReportCommissionWholesaleSuccess
         }),
     };
     base.Function = {
