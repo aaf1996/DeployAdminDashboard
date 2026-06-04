@@ -312,7 +312,7 @@ Mitosiz.Site.MovementOfCommittees.Index.Controller = function () {
         },
         btnPayCommissionsClick: function () {
             Swal.fire({
-                title: "Estás segur@ de asignar el cobro de comisiones a todos los empresarios?",
+                title: "Estás segur@ de asignar el cobro de comisiones a todos los mayoristas?",
                 text: "Esto no se puede revertir!",
                 icon: "warning",
                 showCancelButton: true,
