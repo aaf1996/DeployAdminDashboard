@@ -3,6 +3,7 @@ Mitosiz.Site.MovementOfCommittees.Index.Controller = function () {
     var base = this;
     base.Initialize = function () {
         base.Ajax.AjaxGetPeriods.submit();
+        base.Ajax.AjaxGetListTypeProcessMovementOfCommittees.submit();
         base.Function.clsNumberPagination();
         base.Function.clsUpdateDataClick();
         base.Control.slcTypeOfMovementFilter().change(base.Event.slcTypeOfMovementFilterChange);
@@ -12,6 +13,7 @@ Mitosiz.Site.MovementOfCommittees.Index.Controller = function () {
         base.Control.btnSaveModal().click(base.Event.btnSaveModalClick);
         base.Control.btnPayCommissions().click(base.Event.btnPayCommissionsClick);
         base.Control.btnNewCommission().click(base.Event.btnNewCommissionClick);
+        base.Control.slcTypeProcess().change(base.Event.slcTypeProcessChange);
         base.Control.txtNamesFilter().autocomplete({
             source: function (request, response) {
                 $.ajax({
@@ -111,6 +113,9 @@ Mitosiz.Site.MovementOfCommittees.Index.Controller = function () {
         divObservationModal: function () { return $('#divObservationModal'); },
         hiddenStoreIdModal: function () { return $('#hiddenStoreIdModal'); },
         btnNewCommission: function () { return $('#btnNewCommission'); },
+        slcTypeProcess: function () { return $('#slcTypeProcess'); },
+        txtPurchaseId: function () { return $('#txtPurchaseId'); },
+        divPurchaseIdModal: function () { return $('#divPurchaseIdModal'); },
     };
     base.Event = {
         slcTypeOfMovementFilterChange: function () {
@@ -120,6 +125,21 @@ Mitosiz.Site.MovementOfCommittees.Index.Controller = function () {
             }
             else {
                 base.Control.divPeriodFilter().show();
+            }
+        },
+        slcTypeProcessChange: function () {
+            var typeProcessId = base.Control.slcTypeProcess().val();
+            if (typeProcessId == 1 || typeProcessId == 2) {
+                base.Control.divPeriodModal().show();
+            }
+            else {
+                base.Control.divPeriodModal().hide();
+            }
+            if (typeProcessId == 3 || typeProcessId == 4) {
+                base.Control.divPurchaseIdModal().show();
+            }
+            else {
+                base.Control.divPurchaseIdModal().hide();
             }
         },
         AjaxGetPeriodSuccess: function (data) {
@@ -148,6 +168,19 @@ Mitosiz.Site.MovementOfCommittees.Index.Controller = function () {
                 }
             }
         },
+        AjaxGetListTypeProcessMovementOfCommitteesSuccess: function (data) {
+            if (data) {
+                if (data.isSuccess) {
+                    base.Control.slcTypeProcess().empty();
+                    $.each(data.data, function (key, value) {
+                        base.Control.slcTypeProcess().append($('<option>', {
+                            value: value.mappingTypeMovementOfCommitteesId,
+                            text: value.typeProcess
+                        }));
+                    });
+                }
+            }
+        },
         AjaxGetMovementOfCommitteesForAdminSuccess: function (data) {
             if (data) {
                 if (data.isSuccess) {
@@ -161,7 +194,9 @@ Mitosiz.Site.MovementOfCommittees.Index.Controller = function () {
                 if (data.isSuccess) {
                     base.Control.txtNamesModal().val(data.data.storeName);
                     base.Control.hiddenStoreIdModal().val(data.data.storeId);
-                    base.Control.txtTypeOfMovementModal().val(data.data.typeOfMovement);
+                    //base.Control.txtTypeOfMovementModal().val(data.data.typeOfMovement);
+                    base.Control.slcTypeProcess().val(data.data.mappingTypeMovementOfCommitteesId);
+                    base.Control.slcTypeProcess().selectpicker('refresh');
                     base.Control.txtConceptModal().val(data.data.concept);
                     base.Control.txtAmountModal().val(data.data.amount);
                     base.Control.divObservationModal().show();
@@ -169,6 +204,13 @@ Mitosiz.Site.MovementOfCommittees.Index.Controller = function () {
                     base.Control.divStatusModal().show();
                     base.Control.slcStatusModal().val(data.data.status);
                     base.Control.slcStatusModal().selectpicker('refresh');
+                    if (data.data.mappingTypeMovementOfCommitteesId == 3 || data.data.mappingTypeMovementOfCommitteesId == 4) {
+                        base.Control.txtPurchaseId().val(data.data.purchaseId);
+                        base.Control.divPurchaseIdModal().show();
+                    }
+                    else {
+                        base.Control.divPurchaseIdModal().hide();
+                    }
                     if (data.data.typeOfMovement == "Salida") {
                         base.Control.divPeriodModal().hide();
                     }
@@ -260,14 +302,22 @@ Mitosiz.Site.MovementOfCommittees.Index.Controller = function () {
             }
         },
         btnUpdateModalClick: function () {
+            var typeProcessId = base.Control.slcTypeProcess().val();
             if (base.Control.hiddenStoreIdModal().val() == '') {
                 Swal.fire("Oops...", "Debe completar todos los campos", "error")
             }
+            else if ((typeProcessId == 3 || typeProcessId == 4) && base.Control.txtPurchaseId().val() == '') {
+                Swal.fire("Oops...", "Debe ingresar el Id de la compra relacionada", "error")
+            }
             else {
+                var commissionPeriodId = typeProcessId == 1 || typeProcessId == 2 ? base.Control.slcPeriodModal().val() : null;
+                var purchaseId = typeProcessId == 3 || typeProcessId == 4 ? base.Control.txtPurchaseId().val() : null;
                 base.Ajax.AjaxUpdateMovementOfCommitteesForAdmin.data = {
                     movementOfCommitteesWholesaleId: base.Parameters.movementOfCommitteesId,
                     storeId: base.Control.hiddenStoreIdModal().val(),
-                    commissionPeriodId: base.Control.txtTypeOfMovementModal().val() == "Salida" ? null : base.Control.slcPeriodModal().val(),
+                    commissionPeriodId: commissionPeriodId,
+                    mappingTypeMovementOfCommitteesId: typeProcessId,
+                    purchaseId: purchaseId,
                     status: base.Control.slcStatusModal().val(),
                     concept: base.Control.txtConceptModal().val(),
                     fileName: "",
@@ -278,14 +328,22 @@ Mitosiz.Site.MovementOfCommittees.Index.Controller = function () {
             }
         },
         btnSaveModalClick: function () {
+            var typeProcessId = base.Control.slcTypeProcess().val();
             if (base.Control.hiddenStoreIdModal().val() == '' || base.Control.txtAmountModal().val() == '') {
                 Swal.fire("Oops...", "Debe completar todos los campos", "error")
             }
+            else if ((typeProcessId == 3 || typeProcessId == 4) && base.Control.txtPurchaseId().val() == '') {
+                Swal.fire("Oops...", "Debe ingresar el Id de la compra relacionada", "error")
+            }
             else {
+                var commissionPeriodId = typeProcessId == 1 || typeProcessId == 2 ? base.Control.slcPeriodModal().val() : null;
+                var purchaseId = typeProcessId == 3 || typeProcessId == 4 ? base.Control.txtPurchaseId().val() : null;
                 base.Ajax.AjaxSaveMovementOfCommitteesForAdmin.data = {
                     storeId: base.Control.hiddenStoreIdModal().val(),
-                    commissionPeriodId: base.Control.slcPeriodModal().val(),
-                    typeOfMovement: base.Control.txtTypeOfMovementModal().val(),
+                    commissionPeriodId: commissionPeriodId,
+                    mappingTypeMovementOfCommitteesId: typeProcessId,
+                    purchaseId: purchaseId,
+                    typeOfMovement: 'Type',
                     concept: base.Control.txtConceptModal().val(),
                     amount: base.Control.txtAmountModal().val()
                 };
@@ -297,13 +355,16 @@ Mitosiz.Site.MovementOfCommittees.Index.Controller = function () {
             base.Control.txtNamesModal().val("");
             base.Control.slcPeriodModal().find('option:first').prop('selected', true);
             base.Control.slcPeriodModal().selectpicker('refresh');
-            base.Control.txtTypeOfMovementModal().val("");
+            base.Control.slcTypeProcess().find('option:first').prop('selected', true);
+            base.Control.slcTypeProcess().selectpicker('refresh');
+            //base.Control.txtTypeOfMovementModal().val("");
             base.Control.txtConceptModal().val("");
             base.Control.txtAmountModal().val("");
+            base.Control.txtPurchaseId().val("");
 
 
             base.Control.divPeriodModal().show();
-            base.Control.txtTypeOfMovementModal().val("Ingreso");
+            //base.Control.txtTypeOfMovementModal().val("Ingreso");
             base.Control.divStatusModal().hide();
             base.Control.divObservationModal().hide();
             base.Control.btnSaveModal().show();
@@ -359,6 +420,11 @@ Mitosiz.Site.MovementOfCommittees.Index.Controller = function () {
             action: Mitosiz.Site.MovementOfCommittees.Actions.InsertComissionTobeReceived,
             autoSubmit: false,
             onSuccess: base.Event.AjaxInsertComissionTobeReceivedSuccess
+        }),
+        AjaxGetListTypeProcessMovementOfCommittees: new Mitosiz.Site.UI.Web.Components.Ajax({
+            action: Mitosiz.Site.MovementOfCommittees.Actions.GetListTypeProcessMovementOfCommittees,
+            autoSubmit: false,
+            onSuccess: base.Event.AjaxGetListTypeProcessMovementOfCommitteesSuccess
         }),
     };
     base.Function = {

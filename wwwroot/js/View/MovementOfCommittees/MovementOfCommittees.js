@@ -3,7 +3,7 @@ Mitosiz.Site.MovementOfCommittees.Index.Controller = function () {
     var base = this;
     base.Initialize = function () {
         base.Ajax.AjaxGetPeriods.submit();
-        base.Ajax.AjaxGetTypePurchasesForEditPurchase.submit();
+        base.Ajax.AjaxGetListTypeProcessMovementOfCommittees.submit();
         base.Function.clsNumberPagination();
         base.Function.clsUpdateDataClick();
         base.Control.slcTypeOfMovementFilter().change(base.Event.slcTypeOfMovementFilterChange);
@@ -171,7 +171,7 @@ Mitosiz.Site.MovementOfCommittees.Index.Controller = function () {
                 }
             }
         },
-        AjaxGetTypePurchasesForEditPurchaseSuccess: function (data) {
+        AjaxGetListTypeProcessMovementOfCommitteesSuccess: function (data) {
             if (data) {
                 if (data.isSuccess) {
                     base.Control.slcTypeProcess().empty();
@@ -440,10 +440,10 @@ Mitosiz.Site.MovementOfCommittees.Index.Controller = function () {
             autoSubmit: false,
             onSuccess: base.Event.AjaxGetMovementOfCommitteesForReportSuccess
         }),
-        AjaxGetTypePurchasesForEditPurchase: new Mitosiz.Site.UI.Web.Components.Ajax({
-            action: Mitosiz.Site.MovementOfCommittees.Actions.GetTypePurchasesForEditPurchase,
+        AjaxGetListTypeProcessMovementOfCommittees: new Mitosiz.Site.UI.Web.Components.Ajax({
+            action: Mitosiz.Site.MovementOfCommittees.Actions.GetListTypeProcessMovementOfCommittees,
             autoSubmit: false,
-            onSuccess: base.Event.AjaxGetTypePurchasesForEditPurchaseSuccess
+            onSuccess: base.Event.AjaxGetListTypeProcessMovementOfCommitteesSuccess
         }),
     };
     base.Function = {
